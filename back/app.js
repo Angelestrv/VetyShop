@@ -9,4 +9,4 @@ const productos=require("./routes/products")
 //Estableciendo ruta del navegador
 app.use('/api',productos) //Sujeto a decisión (ruta del navegador)
 
-module.exports=app
+module.exports=app 
