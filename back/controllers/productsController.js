@@ -20,10 +20,12 @@ exports.getProducts = async (req, res, next) => {
 //Ver un producto por ID
 exports.getProductById = async (req, res, next) => {
     const product = await producto.findById(req.params.id)
+    
     if (!product) {
         return res.status(404).json({
             success: false,
-            message: "No encontramos ese producto"
+            message: "No encontramos ese producto",
+            error: true
 
         })
     }
