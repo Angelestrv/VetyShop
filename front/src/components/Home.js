@@ -1,100 +1,62 @@
 import React, { Fragment, useEffect } from 'react'
- import MetaData from './layout/MetaData'
- import {useDispatch} from 'react-redux'
- import { getProducts } from '../actions/productActions'
+import MetaData from './layout/MetaData'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProducts } from '../actions/productActions'
+import { Link } from 'react-router-dom'
+import { useAlert } from 'react-alert'
 
 export const Home = () => {
+    const { loading, productos, error } = useSelector(state => state.products)
+    const alert= useAlert();
+
     const dispatch = useDispatch();
     useEffect(() => {
-         dispatch(getProducts());
+        if (error){
+            return alert.error(error)
+        }
+
+        dispatch(getProducts());
+        alert.success("OK")
     }, [dispatch])
-    
+
     return (
         <Fragment>
-            <MetaData title=" Especial para tu mejor amigo "></MetaData>
-            <h1 id="encabezado_productos">Ultimos Productos</h1>
+            {loading ? <i class="fa fa-spinner fa-pulse fa-3x fa-fw"> Cargando... </i> : (
+                <Fragment>
+                    <MetaData title=" Especial para tu mejor amigo "></MetaData>
+                    <h1 id="encabezado_productos">Ultimos Productos</h1>
 
-            <section id="productos" className='container mt-5'>
-                <div className='row'>
-                    {/*Producto 1*/}
-                    <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
-                        <div className='card p-3 rounded'>
-                            <img className='card-img-top mx-auto' src='./images/catchow.jpg' alt="Cat Chow"></img>
-                            <div className='card-body d-flex flex-column'>
-                                <h5 id="titulo_producto"><a href="http//localhot:3000">Purina - Cat Chow</a></h5>
-                                <div className='rating mt-auto'>
-                                    <div className='rating-outer'>
-                                        <div className='rating-inner'></div>
+                    <section id="productos" className='container mt-5'>
+                        <div className='row'>
+                            {productos && productos.map(producto => (
+
+                                <div key={producto._id} className='col-sm-12 col-md-6 col-lg-3 my-3'>
+                                    <div className='card p-3 rounded'>
+                                        <img className='card-img-top mx-auto' src={producto.imagen[0].url} alt={producto.imagen[0].url}></img>
+                                        <div className='card-body d-flex flex-column'>
+                                            <h5 id="titulo_producto"><Link to={`/producto/${producto._id}`}>{producto.nombre}</Link></h5>
+                                            <div className='rating mt-auto'>
+                                                <div className='rating-outer'>
+                                                    <div className='rating-inner' style={{ width: `${(producto.calificacion / 5) * 100}%` }}></div>
+                                                </div>
+                                                <span id="No_de_opiniones"> {producto.numCalificaciones} Reviews </span>
+                                            </div>
+                                            <p className='card-text'>{producto.precio}</p><Link to={`/producto/${producto._id}`} id="view_btn" className='btn btn-block'>
+                                                Ver detalle
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <span id="No_de_opiniones"> 5 reviews</span>
                                 </div>
-                                <p className='card-text'>$72.000</p><a href='http://localhost:3000' id="view_btn" className='btn btn-block'>
-                                    Ver detalle
-                                </a>
-                            </div>
+                            ))}
                         </div>
-                    </div>
+                    </section>
 
-                    {/*Producto 2*/}
-                    <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
-                        <div className='card p-3 rounded'>
-                            <img className='card-img-top mx-auto' src='./images/sterilcat.jpg' alt="Sterilcat"></img>
-                            <div className='card-body d-flex flex-column'>
-                                <h5 id="titulo_producto"><a href="http//localhot:3000">Purina ONE - Sterilcat</a></h5>
-                                <div className='rating mt-auto'>
-                                    <div className='rating-outer'>
-                                        <div className='rating-inner'></div>
-                                    </div>
-                                    <span id="No_de_opiniones"> 2 reviews</span>
-                                </div>
-                                <p className='card-text'>$52.000</p><a href='http://localhost:3000' id="view_btn" className='btn btn-block'>
-                                    Ver detalle
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                </Fragment>
 
-                    {/*Producto 3*/}
-                    <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
-                        <div className='card p-3 rounded'>
-                            <img className='card-img-top mx-auto' src='./images/gourmet.jpg' alt="Gourtmet lata"></img>
-                            <div className='card-body d-flex flex-column'>
-                                <h5 id="titulo_producto"><a href="http//localhot:3000">Purina Gourtmet - Lata </a></h5>
-                                <div className='rating mt-auto'>
-                                    <div className='rating-outer'>
-                                        <div className='rating-inner'></div>
-                                    </div>
-                                    <span id="No_de_opiniones"> 12 reviws</span>
-                                </div>
-                                <p className='card-text'>$80.000</p><a href="http//localhot:3000" id="view_btn" className='btn btn-block'>
-                                    Ver detalle
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/*Producto 4*/}
-                    <div className='col-sm-12 col-md-m6 col-lg-3 my-3'>
-                        <div className='card p-3 rounded'>
-                            <img className="card-img-top mx-auto" src="./images/gourmet2.jpeg" alt="Gourtmet sobres"></img>
-                            <div className='card-body d-flex flex-column'>
-                                <h5 id="titulo_producto"><a href="http//localhot:3000">Purina Gourtmet - Sobres </a></h5>
-                                <div className='rating mt-auto'>
-                                    <div className='rating-outer'>
-                                        <div className='rating-inner'></div>
-                                    </div>
-                                    <span id="No_de_opiniones"> 10 reviws</span>
-                                </div>
-                                <p className='card-text'>$75.000</p><a href="http//localhot:3000" id="view_btn" className='btn btn-block'>
-                                    Ver detalle
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            )}
 
 
-                </div>
-            </section>
+
         </Fragment>
     )
 }
